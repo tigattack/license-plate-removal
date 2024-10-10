@@ -1,5 +1,7 @@
 import cv2
+
 from helpers import Helpers
+
 helpers = Helpers()
 
 # Open image
