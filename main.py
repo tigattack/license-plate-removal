@@ -20,12 +20,11 @@ rectangleContours = helpers.cvFilterRectangleContours(contours)
 plateContour = rectangleContours[0]
 plateContour = helpers.cvResizeContour(plateContour, 1.0)
 
-# Crop and blur the plate
+# Crop image down to the detected plate
 plateImage = helpers.cvCropByContour(imageCv, plateContour)
-plateImageBlur = helpers.cvApplyGaussianBlur(plateImage, 25)
 
 # Find the plate's background color
-plateBackgroundColor = helpers.cvFindMostOccurringColor(plateImageBlur)
+plateBackgroundColor = helpers.cvFindMostOccurringColor(plateImage)
 
 # Draw over the plate
 result = cv2.drawContours(imageCv.copy(), [plateContour], -1, plateBackgroundColor, -1)
