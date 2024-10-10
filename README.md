@@ -18,6 +18,20 @@ Options:
   -h, --help              Show this message and exit.
 ```
 
+## Note
+
+This method isn't always super reliable, and sometimes will simply fail.
+
+Frankly, I just haven't taken the time to fully understand the source and how I could re-work it to optimise reliability.
+
+If the lack of reliability becomes a problem for me, I may consider doing so, but until then it works well enough for me.
+
+Alternatives considered:
+
+* https://github.com/syedrz/Face_and_LicensePlates_Anonymizer
+* https://github.com/understand-ai/anonymizer (this seems to be a copy of the one above, maybe modified?)
+* https://github.com/Maleehak/Car-number-plate-recognition-using-OpenCV
+
 ## Attribution
 
 Thanks to [JPLeoRX](https://github.com/JPLeoRX) for their hard work on this! 
