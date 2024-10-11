@@ -33,7 +33,12 @@ The logic for plate detection is quite brittle and works by finding all rectangl
 
 If the lack of reliability becomes a problem for me, I may consider doing attempting to improve it, but until then it works well enough for me.
 
-Alternatives considered:
+### Ideas for improvement
+
+* Filter colours before performing edge detection. My focus is UK plates, so filtering for yellow & white would narrow it down a lot in most cases.
+* Perform OCR, looking for text that constitutes a valid number plate. This could be further improved by performing further colour filtering, looking for black text on a white or yellow background.
+
+### Alternatives considered
 
 * https://github.com/syedrz/Face_and_LicensePlates_Anonymizer
 * https://github.com/understand-ai/anonymizer (this seems to be a copy of the one above, maybe modified?)
