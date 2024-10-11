@@ -1,5 +1,6 @@
 import cv2
 import numpy
+from numpy._typing._array_like import NDArray
 from PIL import Image as imageMain
 from PIL.Image import Image
 
@@ -10,35 +11,39 @@ class Helpers:
     def openImagePil(self, imagePath: str) -> Image:
         return imageMain.open(imagePath)
 
-    def convertPilImageToCvImage(self, pilImage: Image):
+    def convertPilImageToCvImage(self, pilImage: Image) -> cv2.typing.MatLike:
         return cv2.cvtColor(numpy.array(pilImage), cv2.COLOR_RGB2BGR)
 
-    def openImageCv(self, imagePath: str):
+    def openImageCv(self, imagePath: str) -> cv2.typing.MatLike:
         return self.convertPilImageToCvImage(self.openImagePil(imagePath))
 
-    def cvToGrayScale(self, cvImage):
+    def cvToGrayScale(self, cvImage: cv2.typing.MatLike) -> cv2.typing.MatLike:
         return cv2.cvtColor(cvImage, cv2.COLOR_BGR2GRAY)
 
-    def cvApplyBilateralFilter(self, cvImage):
+    def cvApplyBilateralFilter(self, cvImage: cv2.typing.MatLike) -> cv2.typing.MatLike:
         return cv2.bilateralFilter(cvImage, 11, 17, 17)
 
-    def cvApplyGaussianBlur(self, cvImage, size: int):
+    def cvApplyGaussianBlur(
+        self, cvImage: cv2.typing.MatLike, size: int
+    ) -> cv2.typing.MatLike:
         return cv2.GaussianBlur(cvImage, (size, size), 0)
 
-    def cvToCannyEdge(self, cvImage):
+    def cvToCannyEdge(self, cvImage: cv2.typing.MatLike) -> cv2.typing.MatLike:
         return cv2.Canny(cvImage, 170, 200)
 
-    def cvExtractContours(self, cvImage):
+    def cvExtractContours(
+        self, cvImage: cv2.typing.MatLike
+    ) -> list[cv2.typing.MatLike]:
         """Extracts all contours from the image, and resorts them by area (from largest to smallest)"""
-        contours, hierarchy = cv2.findContours(
-            cvImage, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE
-        )
+        contours, _ = cv2.findContours(cvImage, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
         contours = sorted(contours, key=cv2.contourArea, reverse=True)
         return contours
 
-    def cvFilterRectangleContours(self, contours) -> list:
+    def cvFilterRectangleContours(
+        self, contours: list[cv2.typing.MatLike]
+    ) -> list[cv2.typing.MatLike]:
         """Find contours that look like rectangles"""
-        rectangleContours = []
+        rectangleContours: list[cv2.typing.MatLike] = []
         for contour in contours:
             perimeter = cv2.arcLength(contour, True)
             approximationAccuracy = 0.02 * perimeter
@@ -47,15 +52,15 @@ class Helpers:
                 rectangleContours.append(contour)
         return rectangleContours
 
-    def cvCropByContour(self, cvImage, contour):
+    def cvCropByContour(self, cvImage: cv2.typing.MatLike, contour: NDArray):
         """Crops an image around a given contour (returns the area inside this contour)"""
         newImage = cvImage.copy()
         x, y, w, h = cv2.boundingRect(contour)
         return newImage[y : y + h, x : x + w]
 
-    def cvFindMostOccurringColor(self, cvImage) -> tuple[int, int, int]:
+    def cvFindMostOccurringColor(self, cvImage: NDArray) -> tuple[int, int, int]:
         """Counts all unique BGR colors, and return the most occurring one"""
-        width, height, channels = cvImage.shape
+        width, height, _ = cvImage.shape
         colorCount = {}
         for y in range(0, height):
             for x in range(0, width):
@@ -79,14 +84,16 @@ class Helpers:
 
         return maxBGR
 
-    def cvFindCenterPointOfContour(self, contour) -> tuple[int, int]:
+    def cvFindCenterPointOfContour(
+        self, contour: cv2.typing.MatLike
+    ) -> tuple[int, int]:
         """Finds a rough approximation of center point for a given contour"""
         moments = cv2.moments(contour)
         centerPointX = int(moments["m10"] / moments["m00"])
         centerPointY = int(moments["m01"] / moments["m00"])
         return (centerPointX, centerPointY)
 
-    def cvResizeContour(self, contour, resizeRatio: float):
+    def cvResizeContour(self, contour: cv2.typing.MatLike, resizeRatio: float):
         """Given an existing contour resize it to a given ratio"""
         centerPointX, centerPointY = self.cvFindCenterPointOfContour(contour)
         contourResizedPoints = []
