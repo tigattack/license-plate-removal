@@ -46,9 +46,21 @@ class Helpers:
         rectangleContours: list[cv2.typing.MatLike] = []
         for contour in contours:
             perimeter = cv2.arcLength(contour, True)
-            approximationAccuracy = 0.02 * perimeter
+            approximationAccuracy = 0.014 * perimeter
             approximation = cv2.approxPolyDP(contour, approximationAccuracy, True)
-            if len(approximation) == 4:
+
+            # Find rectangle with smallest area
+            min_area_rectangle = cv2.minAreaRect(contour)
+            mar_area = min_area_rectangle[1][0] * min_area_rectangle[1][1]
+
+            if mar_area == 0:
+                continue
+
+            # Compare to area of the contour
+            solidity = cv2.contourArea(contour) / float(mar_area)
+
+            # Ensure contour is a rectangle and solidity is near 1 - closer to 1 = more rectangular
+            if len(approximation) == 4 and 1 > solidity > 0.8:
                 rectangleContours.append(contour)
         return rectangleContours
 

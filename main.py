@@ -46,20 +46,38 @@ def obfuscate_plate(source: str, destination: str | None, force: bool) -> None:
     # Pre-processing
     gray = helpers.cvToGrayScale(imageCv)
     bilateral = helpers.cvApplyBilateralFilter(gray)
-    blur = helpers.cvApplyGaussianBlur(bilateral, 5)
 
-    # Detect edge contours and find the plate contour
-    edged = helpers.cvToCannyEdge(blur)
-    contours = helpers.cvExtractContours(edged)
+    # Detect edge contours
+    edged = helpers.cvToCannyEdge(bilateral)
+
+    # Dilate the contours to allow for unclosed contours
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (2,2))
+    dilated = cv2.dilate(edged, kernel)
+
+    # Find all contours
+    contours = helpers.cvExtractContours(dilated)
+
+    # Narrow down to rectangular contours
     rectangleContours = helpers.cvFilterRectangleContours(contours)
-    plateContour = rectangleContours[0]
-    plateContour = helpers.cvResizeContour(plateContour, 1.0)
 
-    # Crop and blur the plate
+    # Pick first/largest rectangle as plate
+    # NOTE: This is just picking the largest contour blindly, so it's open to failure if there are large road signs or anything like that.
+    plateContour = helpers.cvResizeContour(rectangleContours[0], 1.0)
+
+    # Crop down to the plate
     plateImage = helpers.cvCropByContour(imageCv, plateContour)
 
     # Find the plate's background color
     plateBackgroundColor = helpers.cvFindMostOccurringColor(plateImage)
+
+    # For debug, enable this instead of the `result` variable below.
+    # Draws all found rectangles in white on a black background.
+    # import numpy
+    # image = numpy.zeros(imageCv.shape, dtype=numpy.uint8)
+
+    # result = cv2.drawContours(
+    #     image, rectangleContours, -1, (255,255,255), -1
+    # )
 
     # Draw over the plate
     result = cv2.drawContours(
