@@ -18,13 +18,20 @@ Options:
   -h, --help              Show this message and exit.
 ```
 
+## Examples
+
+| Before                           | After                                       |
+| -------------------------------- | ------------------------------------------- |
+| ![](examples/front_original.jpg) | ![](examples/front_original_obfuscated.jpg) |
+| ![](examples/rear_original.jpg)  | ![](examples/rear_original_obfuscated.jpg)  |
+
 ## Note
 
 This method isn't always super reliable, and sometimes will simply fail.
 
-Frankly, I just haven't taken the time to fully understand the source and how I could re-work it to optimise reliability.
+The logic for plate detection is quite brittle and works by finding all rectangles with some best-effort tuning to reduce false positives, and then simply picking the largest rectangle found, so it's open to failure if there are large road signs or anything like that. Livery on police vehicles has also proven to be problematic.
 
-If the lack of reliability becomes a problem for me, I may consider doing so, but until then it works well enough for me.
+If the lack of reliability becomes a problem for me, I may consider doing attempting to improve it, but until then it works well enough for me.
 
 Alternatives considered:
 
