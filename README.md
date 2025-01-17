@@ -43,6 +43,7 @@ If the lack of reliability becomes a problem for me, I may consider doing attemp
 * https://github.com/syedrz/Face_and_LicensePlates_Anonymizer
 * https://github.com/understand-ai/anonymizer (this seems to be a copy of the one above, maybe modified?)
 * https://github.com/Maleehak/Car-number-plate-recognition-using-OpenCV
+* Worth looking at https://github.com/MYoussef885/License-Plate-Recognition
 
 ## Attribution
 
