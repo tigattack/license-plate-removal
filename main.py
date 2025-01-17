@@ -23,7 +23,7 @@ CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 @click.option(
     "-d",
     "--destination",
-    type=click.Path(exists=True),
+    type=click.Path(),
     help="Destination image path. Default is <source>_obfuscated.<ext>",
 )
 @click.option(
@@ -39,6 +39,10 @@ def obfuscate_plate(source: str, destination: str | None, force: bool) -> None:
     if not destination:
         fileparts = os.path.splitext(source)
         destination = fileparts[0] + "_obfuscated" + fileparts[1]
+
+    # if not destination.startswith('/'):
+    #     destination = os.path.abspath(destination)
+    #     print(destination)
 
     # Open image
     imageCv = helpers.openImageCv(source)
